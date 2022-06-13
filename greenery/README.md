@@ -17,13 +17,19 @@ Try running the following commands:
 
 ## Week 1 Assignment
 
-- How many users do we have?
-Query: select count(distinct user_id) from stg.users
-Answer: 130 Users
+- How many users do we have?  
+Query:
+```
+select count(distinct user_id) from stg.users
+```
+
+ Answer: 130 Users
 
 
 - On average, how many orders do we receive per hour?
-Query : with raw_data as (
+
+```
+with raw_data as (
 select 
   date_trunc('hour', created_at),
   count(distinct order_id) as distinct_orders
@@ -31,14 +37,20 @@ from stg_orders
 group by 1
 )
 select avg(distinct_orders) from raw_data
+```
 Answer: 7.5 Orders Per Hour
 
 - On average, how long does an order take from being placed to being delivered?
-Query: select avg(delivered_at - created_at) from stg_orders where delivered_at is not null
+
+```
+select avg(delivered_at - created_at) from stg_orders where delivered_at is not null
+```
 Answer: 3 days, 21 hours, 24 minutes
 
 - How many users have only made one purchase? Two purchases? Three+ purchases?
-Query: with raw_data as (
+
+```
+with raw_data as (
 select 
   user_id,
   count(distinct order_id) as distinct_orders
@@ -63,10 +75,14 @@ select
 from
   grouped_users
 group by 1 
-order by 1 
+order by 1
+```
 Answer: 25 users with 1 purchase, 28 users with 2 purchases, 71 users with 3 purchases
 
-Query: with raw_data as (
+* On average, how many unique sessions do we have per hour?
+
+```
+with raw_data as (
 select 
   date_trunc('hour', created_at),
   count(distinct session_id) as distinct_sessions
@@ -74,4 +90,5 @@ from stg.events
 group by 1 
 )
 select avg(distinct_sessions) from raw_data
+```
 Answer: 16.32 sessions per hour
